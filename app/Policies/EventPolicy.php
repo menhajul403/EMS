@@ -4,63 +4,61 @@ namespace App\Policies;
 
 use App\Models\Event;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
 
 class EventPolicy
 {
-    /**
-     * Determine whether the user can view any models.
-     */
+    public function before(User $user, string $ability): ?bool
+    {
+        if ($user->hasRole('Super Admin')) {
+            return true;
+        }
+
+        return null;
+    }
+
     public function viewAny(User $user): bool
     {
-        return false;
+        return $user->can('event.view');
     }
 
-    /**
-     * Determine whether the user can view the model.
-     */
     public function view(User $user, Event $event): bool
     {
-        return false;
+        if ($event->status === 'published') {
+            return true;
+        }
+
+        return $user->can('event.view')
+            && ($user->id === $event->organizer_id || $user->id === $event->faculty_advisor_id);
     }
 
-    /**
-     * Determine whether the user can create models.
-     */
     public function create(User $user): bool
     {
-        return false;
+        return $user->can('event.create');
     }
 
-    /**
-     * Determine whether the user can update the model.
-     */
     public function update(User $user, Event $event): bool
     {
+        if ($user->hasRole('Faculty') && $user->id === $event->faculty_advisor_id) {
+            return in_array($event->status, ['pending', 'approved', 'rejected', 'draft'], true);
+        }
+
+        if (! $user->can('event.edit')) {
+            return false;
+        }
+
+        if ($user->hasAnyRole(['University Admin', 'Coordinator'])) {
+            return $user->id === $event->organizer_id || $user->hasRole('University Admin');
+        }
+
         return false;
     }
 
-    /**
-     * Determine whether the user can delete the model.
-     */
     public function delete(User $user, Event $event): bool
     {
-        return false;
-    }
+        if (! $user->can('event.delete')) {
+            return false;
+        }
 
-    /**
-     * Determine whether the user can restore the model.
-     */
-    public function restore(User $user, Event $event): bool
-    {
-        return false;
-    }
-
-    /**
-     * Determine whether the user can permanently delete the model.
-     */
-    public function forceDelete(User $user, Event $event): bool
-    {
-        return false;
+        return $user->id === $event->organizer_id || $user->hasRole('University Admin');
     }
 }

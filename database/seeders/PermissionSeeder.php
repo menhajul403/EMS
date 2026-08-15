@@ -61,6 +61,12 @@ class PermissionSeeder extends Seeder
 
             // Feedback
             'feedback.view',
+            'feedback.create',
+
+            // Gallery
+            'gallery.view',
+            'gallery.upload',
+            'gallery.delete',
 
             // Report
             'report.view',

@@ -12,11 +12,11 @@ return new class extends Migration
             $table->id();
             $table->foreignId('event_id')->constrained('events')->cascadeOnDelete();
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
-            $table->enum('status', ['registered','cancelled','waitlisted'])->default('registered');
+            $table->enum('status', ['registered', 'cancelled', 'waitlisted', 'attended', 'no_show'])->default('registered');
             $table->timestamp('attended_at')->nullable();
             $table->timestamps();
 
-            $table->unique(['event_id','user_id']);
+            $table->unique(['event_id', 'user_id']);
         });
     }
 

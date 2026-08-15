@@ -6,7 +6,7 @@ export default function Scan() {
 
   function submit(e: any) {
     e.preventDefault();
-    post('/coordinator/attendances/scan');
+    post(route('coordinator.attendance.scan.store'));
   }
 
   return (

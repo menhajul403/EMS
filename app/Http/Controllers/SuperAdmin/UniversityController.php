@@ -7,9 +7,9 @@ use App\Http\Requests\University\StoreUniversityRequest;
 use App\Http\Requests\University\UpdateUniversityRequest;
 use App\Models\University;
 use App\Services\University\UniversityService;
+use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Inertia\Response;
-use Illuminate\Http\RedirectResponse;
 
 class UniversityController extends Controller
 {
@@ -59,7 +59,7 @@ class UniversityController extends Controller
     {
         $this->authorize('update', $university);
 
-        // Update logic will be added in UniversityService
+        $this->universityService->update($university, $request->validated());
 
         return redirect()
             ->route('super-admin.universities.index')

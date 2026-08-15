@@ -20,6 +20,8 @@ class StoreEventRequest extends FormRequest
             'description' => 'nullable|string',
             'category_id' => 'nullable|exists:event_categories,id',
             'venue_id' => 'nullable|exists:venues,id',
+            'department_id' => 'nullable|exists:departments,id',
+            'faculty_advisor_id' => 'nullable|exists:users,id',
             'start_at' => 'nullable|date',
             'end_at' => 'nullable|date|after_or_equal:start_at',
             'registration_deadline' => 'nullable|date',
