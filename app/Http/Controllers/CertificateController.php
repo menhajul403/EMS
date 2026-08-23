@@ -14,7 +14,7 @@ class CertificateController extends Controller
 
     public function generate(Registration $registration): BinaryFileResponse|RedirectResponse
     {
-        $this->authorize('certificate.generate');
+        $this->authorize('create', [Certificate::class, $registration]);
 
         try {
             $certificate = $this->certificateService->generateForRegistration($registration);
@@ -22,7 +22,13 @@ class CertificateController extends Controller
             return back()->with('error', $e->getMessage());
         }
 
-        return response()->download(storage_path('app/'.$certificate->file_path));
+        $filePath = storage_path('app/'.$certificate->file_path);
+
+        if (! is_file($filePath)) {
+            return back()->with('error', 'Certificate file could not be created.');
+        }
+
+        return response()->download($filePath, basename($filePath));
     }
 
     public function verify(string $code)

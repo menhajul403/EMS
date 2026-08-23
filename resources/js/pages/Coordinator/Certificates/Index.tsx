@@ -25,8 +25,10 @@ export default function Index({ event, registrations }: any) {
                                 <div className="font-medium">{r.user?.name}</div>
                                 <div className="text-sm text-gray-500">{r.certificate ? `Issued: ${r.certificate.certificate_number}` : 'Not generated'}</div>
                             </div>
-                            {!r.certificate && (
-                                <Link href={route('certificates.generate', r.id)} className="text-blue-600">Generate</Link>
+                            {r.certificate ? (
+                                <a href={route('certificates.generate', r.id)} className="text-green-600">Download</a>
+                            ) : (
+                                <a href={route('certificates.generate', r.id)} className="text-blue-600">Generate</a>
                             )}
                         </li>
                     ))}

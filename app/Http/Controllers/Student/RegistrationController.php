@@ -51,13 +51,12 @@ class RegistrationController extends Controller
             return back()->with('error', 'Registration deadline has passed.');
         }
 
-        $exists = Registration::query()
+        $registration = Registration::query()
             ->where('event_id', $event->id)
             ->where('user_id', $request->user()->id)
-            ->where('status', 'registered')
-            ->exists();
+            ->first();
 
-        if ($exists) {
+        if ($registration?->status === 'registered') {
             return back()->with('error', 'You have already registered for this event.');
         }
 
@@ -72,14 +71,23 @@ class RegistrationController extends Controller
             }
         }
 
-        DB::transaction(function () use ($event, $request) {
-            Registration::create([
-                'event_id' => $event->id,
-                'user_id' => $request->user()->id,
+        DB::transaction(function () use ($event, $request, $registration) {
+            $attributes = [
                 'status' => 'registered',
+                'attended_at' => null,
                 'qr_code' => (string) Str::uuid(),
-                'qr_expires_at' => null,
-            ]);
+                'qr_expires_at' => $event->end_at,
+            ];
+
+            if ($registration) {
+                $registration->update($attributes);
+            } else {
+                Registration::create([
+                    'event_id' => $event->id,
+                    'user_id' => $request->user()->id,
+                    ...$attributes,
+                ]);
+            }
         });
 
         $request->user()->notify(new RegistrationSuccessfulNotification($event));

@@ -102,7 +102,9 @@ export default function Dashboard() {
                             )}
                             {roles?.includes('University Admin') && (
                                 <>
+                                    <li><Link href={route('university.users.index')} className="text-blue-600">Users</Link></li>
                                     <li><Link href={route('university.categories.index')} className="text-blue-600">Categories</Link></li>
+                                    <li><Link href={route('university.clubs.index')} className="text-blue-600">Clubs</Link></li>
                                     <li><Link href={route('university.venues.index')} className="text-blue-600">Venues</Link></li>
                                     <li><Link href={route('reports.index')} className="text-blue-600">Reports</Link></li>
                                 </>

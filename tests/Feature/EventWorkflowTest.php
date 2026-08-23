@@ -4,9 +4,6 @@ use App\Models\Event;
 use App\Models\Feedback;
 use App\Models\Registration;
 use App\Models\User;
-use Database\Seeders\PermissionSeeder;
-use Database\Seeders\RolePermissionSeeder;
-use Database\Seeders\RoleSeeder;
 
 test('coordinator can submit event for approval', function () {
     seedRoles();
@@ -149,4 +146,39 @@ test('duplicate feedback is prevented', function () {
         ])
         ->assertRedirect()
         ->assertSessionHas('error');
+});
+
+test('student can view feedback page after attending', function () {
+    seedRoles();
+
+    $student = User::factory()->create();
+    $student->assignRole('Student');
+
+    $this->actingAs($student)
+        ->get(route('student.feedback.index'))
+        ->assertOk();
+});
+
+test('student can register again after cancelling', function () {
+    seedRoles();
+
+    $student = User::factory()->create();
+    $student->assignRole('Student');
+    $event = Event::factory()->published()->create();
+
+    $this->actingAs($student)
+        ->post(route('student.events.register', $event))
+        ->assertRedirect();
+
+    $this->actingAs($student)
+        ->delete(route('student.events.cancel', $event))
+        ->assertRedirect();
+
+    $this->actingAs($student)
+        ->post(route('student.events.register', $event))
+        ->assertRedirect()
+        ->assertSessionHas('success');
+
+    expect(Registration::query()->where('event_id', $event->id)->where('user_id', $student->id)->count())->toBe(1);
+    expect(Registration::query()->where('event_id', $event->id)->where('user_id', $student->id)->value('status'))->toBe('registered');
 });

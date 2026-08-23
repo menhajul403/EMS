@@ -41,12 +41,9 @@ export default function Index({ registrations }: any) {
                                             </>
                                         )}
                                         {registration.attended_at && (
-                                            <Link
-                                                href={route('certificates.generate', registration.id)}
-                                                className="text-green-600"
-                                            >
+                                            <a href={route('certificates.generate', registration.id)} className="text-green-600">
                                                 Download Certificate
-                                            </Link>
+                                            </a>
                                         )}
                                     </div>
                                 </div>

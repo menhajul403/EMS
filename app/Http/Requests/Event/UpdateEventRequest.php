@@ -23,6 +23,7 @@ class UpdateEventRequest extends FormRequest
             'category_id' => 'nullable|exists:event_categories,id',
             'venue_id' => 'nullable|exists:venues,id',
             'department_id' => 'nullable|exists:departments,id',
+            'club_id' => 'nullable|exists:clubs,id',
             'faculty_advisor_id' => 'nullable|exists:users,id',
             'start_at' => 'nullable|date',
             'end_at' => 'nullable|date|after_or_equal:start_at',

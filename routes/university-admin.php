@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\University\ClubController;
 use App\Http\Controllers\University\DepartmentController;
 use App\Http\Controllers\University\EventCategoryController;
+use App\Http\Controllers\University\UserController;
 use App\Http\Controllers\University\VenueController;
 use Illuminate\Support\Facades\Route;
 
@@ -23,4 +25,13 @@ Route::middleware(['auth', 'role:University Admin'])
         Route::post('departments', [DepartmentController::class, 'store'])->name('departments.store');
         Route::put('departments/{department}', [DepartmentController::class, 'update'])->name('departments.update');
         Route::delete('departments/{department}', [DepartmentController::class, 'destroy'])->name('departments.destroy');
+
+        Route::get('clubs', [ClubController::class, 'index'])->name('clubs.index');
+        Route::post('clubs', [ClubController::class, 'store'])->name('clubs.store');
+        Route::put('clubs/{club}', [ClubController::class, 'update'])->name('clubs.update');
+        Route::delete('clubs/{club}', [ClubController::class, 'destroy'])->name('clubs.destroy');
+
+        Route::get('users', [UserController::class, 'index'])->name('users.index');
+        Route::post('users', [UserController::class, 'store'])->name('users.store');
+        Route::delete('users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
     });

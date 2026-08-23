@@ -23,16 +23,10 @@ class DemoRegistrationSeeder extends Seeder
             return;
         }
 
-        $registration = Registration::firstOrCreate(
-            [
-                'event_id' => $publishedEvent->id,
-                'user_id' => $student->id,
-            ],
-            [
-                'status' => 'registered',
-                'qr_code' => (string) Str::uuid(),
-            ]
-        );
+        Registration::query()
+            ->where('event_id', $publishedEvent->id)
+            ->where('user_id', $student->id)
+            ->update(['status' => 'cancelled', 'attended_at' => null]);
 
         if ($completedEvent) {
             $completedEvent->update(['status' => 'completed']);
@@ -74,14 +68,5 @@ class DemoRegistrationSeeder extends Seeder
             );
         }
 
-        if ($coordinator && $registration->attended_at && ! $registration->attendance()->exists()) {
-            Attendance::create([
-                'registration_id' => $registration->id,
-                'event_id' => $publishedEvent->id,
-                'student_id' => $student->id,
-                'checked_in_at' => now(),
-                'checked_in_by' => $coordinator->id,
-            ]);
-        }
     }
 }

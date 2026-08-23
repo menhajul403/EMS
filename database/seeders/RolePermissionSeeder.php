@@ -21,6 +21,7 @@ class RolePermissionSeeder extends Seeder
                 'category.view', 'category.create', 'category.edit', 'category.delete',
                 'department.view', 'department.create', 'department.edit', 'department.delete',
                 'venue.view', 'venue.create', 'venue.edit', 'venue.delete',
+                'club.view', 'club.create', 'club.edit', 'club.delete',
                 'registration.view', 'registration.approve', 'registration.reject',
                 'attendance.view', 'attendance.scan',
                 'certificate.view', 'certificate.generate',

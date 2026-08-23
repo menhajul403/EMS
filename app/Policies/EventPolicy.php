@@ -38,7 +38,8 @@ class EventPolicy
 
     public function update(User $user, Event $event): bool
     {
-        if ($user->hasRole('Faculty') && $user->id === $event->faculty_advisor_id) {
+        if ($user->hasRole('Faculty') && ($user->id === $event->faculty_advisor_id
+            || ($event->faculty_advisor_id === null && $user->department_id === $event->department_id))) {
             return in_array($event->status, ['pending', 'approved', 'rejected', 'draft'], true);
         }
 

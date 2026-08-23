@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Coordinator;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Event\StoreEventRequest;
 use App\Http\Requests\Event\UpdateEventRequest;
+use App\Models\Club;
 use App\Models\Department;
 use App\Models\Event;
 use App\Models\EventCategory;
@@ -39,6 +40,7 @@ class EventController extends Controller
             'categories' => EventCategory::orderBy('name')->get(['id', 'name']),
             'venues' => Venue::orderBy('name')->get(['id', 'name']),
             'departments' => Department::orderBy('name')->get(['id', 'name']),
+            'clubs' => Club::where('status', 'active')->orderBy('name')->get(['id', 'name']),
             'facultyAdvisors' => User::role('Faculty')->orderBy('name')->get(['id', 'name']),
         ]);
     }
@@ -64,6 +66,7 @@ class EventController extends Controller
             'categories' => EventCategory::orderBy('name')->get(['id', 'name']),
             'venues' => Venue::orderBy('name')->get(['id', 'name']),
             'departments' => Department::orderBy('name')->get(['id', 'name']),
+            'clubs' => Club::where('status', 'active')->orderBy('name')->get(['id', 'name']),
             'facultyAdvisors' => User::role('Faculty')->orderBy('name')->get(['id', 'name']),
         ]);
     }

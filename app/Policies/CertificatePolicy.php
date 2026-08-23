@@ -3,6 +3,7 @@
 namespace App\Policies;
 
 use App\Models\Certificate;
+use App\Models\Registration;
 use App\Models\User;
 
 class CertificatePolicy
@@ -23,12 +24,13 @@ class CertificatePolicy
 
     public function view(User $user, Certificate $certificate): bool
     {
-        return $user->can('certificate.view')
-            && ($user->can('certificate.generate') || $user->id === $certificate->registration?->user_id);
+        return $user->id === $certificate->registration?->user_id
+            || ($user->can('certificate.generate') && $certificate->registration?->event?->organizer_id === $user->id);
     }
 
-    public function create(User $user): bool
+    public function create(User $user, Registration $registration): bool
     {
-        return $user->can('certificate.generate');
+        return ($user->can('certificate.generate') && $registration->event?->organizer_id === $user->id)
+            || ($user->can('certificate.view') && $registration->user_id === $user->id);
     }
 }

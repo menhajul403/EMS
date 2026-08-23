@@ -46,6 +46,12 @@ class PermissionSeeder extends Seeder
             'venue.edit',
             'venue.delete',
 
+            // Club
+            'club.view',
+            'club.create',
+            'club.edit',
+            'club.delete',
+
             // Registration
             'registration.view',
             'registration.approve',

@@ -1,7 +1,7 @@
 import AppLayout from '@/layouts/app-layout';
 import { Head, useForm } from '@inertiajs/react';
 
-export default function Create({ categories, venues, departments, facultyAdvisors }: any) {
+export default function Create({ categories, venues, departments, facultyAdvisors, clubs }: any) {
     const { data, setData, post, processing, errors } = useForm({
         title: '',
         slug: '',
@@ -11,6 +11,7 @@ export default function Create({ categories, venues, departments, facultyAdvisor
         venue_id: '',
         department_id: '',
         faculty_advisor_id: '',
+        club_id: '',
         start_at: '',
         end_at: '',
         registration_deadline: '',
@@ -73,6 +74,13 @@ export default function Create({ categories, venues, departments, facultyAdvisor
                                 {departments.map((d: any) => (
                                     <option key={d.id} value={d.id}>{d.name}</option>
                                 ))}
+                            </select>
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium">Club</label>
+                            <select value={data.club_id} onChange={(e) => setData('club_id', e.target.value)} className={fieldClass}>
+                                <option value="">Choose</option>
+                                {clubs?.map((club: any) => <option key={club.id} value={club.id}>{club.name}</option>)}
                             </select>
                         </div>
                         <div>

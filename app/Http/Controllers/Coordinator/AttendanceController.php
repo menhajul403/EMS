@@ -38,6 +38,10 @@ class AttendanceController extends Controller
             return back()->with('error', 'Invalid QR code or registration is not active.');
         }
 
+        if ($registration->qr_expires_at && now()->greaterThan($registration->qr_expires_at)) {
+            return back()->with('error', 'This QR code has expired.');
+        }
+
         if ($registration->attendance()->exists()) {
             return back()->with('error', 'Attendance already recorded for this registration.');
         }

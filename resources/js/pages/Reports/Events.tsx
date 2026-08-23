@@ -15,10 +15,10 @@ export default function Events({ events, filters, categories }: any) {
                 <Link href={route('reports.index')} className="text-sm text-blue-600">Back to reports</Link>
                 <h1 className="mt-4 text-2xl font-semibold">Event Report</h1>
 
-                <form onSubmit={applyFilters} className="mt-4 grid gap-3 rounded border p-4 md:grid-cols-4">
+                <form onSubmit={applyFilters} className="mt-4 grid gap-3 rounded border p-4 md:grid-cols-5">
                     <select name="status" defaultValue={filters.status || ''} className="rounded border px-3 py-2">
                         <option value="">All statuses</option>
-                        {['draft', 'pending', 'approved', 'published', 'completed', 'cancelled'].map((s) => (
+                        {['draft', 'pending', 'approved', 'published', 'ongoing', 'completed', 'rejected', 'cancelled', 'archived'].map((s) => (
                             <option key={s} value={s}>{s}</option>
                         ))}
                     </select>
@@ -27,6 +27,7 @@ export default function Events({ events, filters, categories }: any) {
                         {categories.map((c: any) => <option key={c.id} value={c.id}>{c.name}</option>)}
                     </select>
                     <input type="date" name="from" defaultValue={filters.from || ''} className="rounded border px-3 py-2" />
+                    <input type="date" name="to" defaultValue={filters.to || ''} className="rounded border px-3 py-2" />
                     <button type="submit" className="rounded bg-blue-600 px-4 py-2 text-white">Filter</button>
                 </form>
 

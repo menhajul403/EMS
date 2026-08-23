@@ -23,7 +23,7 @@ class EventSeeder extends Seeder
             return;
         }
 
-        Event::firstOrCreate([
+        Event::updateOrCreate([
             'slug' => 'intro-to-campusconnect',
         ], [
             'title' => 'Intro to CampusConnect Platform',

@@ -1,7 +1,7 @@
 import AppLayout from '@/layouts/app-layout';
 import { Head, useForm } from '@inertiajs/react';
 
-export default function Edit({ event, categories, venues, departments, facultyAdvisors }: any) {
+export default function Edit({ event, categories, venues, departments, facultyAdvisors, clubs }: any) {
     const formatDate = (d: string | null) => d ? new Date(d).toISOString().slice(0, 16) : '';
 
     const { data, setData, put, processing, errors } = useForm({
@@ -13,6 +13,7 @@ export default function Edit({ event, categories, venues, departments, facultyAd
         venue_id: event.venue_id || '',
         department_id: event.department_id || '',
         faculty_advisor_id: event.faculty_advisor_id || '',
+        club_id: event.club_id || '',
         start_at: formatDate(event.start_at),
         end_at: formatDate(event.end_at),
         registration_deadline: formatDate(event.registration_deadline),
@@ -69,6 +70,13 @@ export default function Edit({ event, categories, venues, departments, facultyAd
                             <select value={data.department_id} onChange={(e) => setData('department_id', e.target.value)} className={fieldClass}>
                                 <option value="">Choose</option>
                                 {departments.map((d: any) => <option key={d.id} value={d.id}>{d.name}</option>)}
+                            </select>
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium">Club</label>
+                            <select value={data.club_id} onChange={(e) => setData('club_id', e.target.value)} className={fieldClass}>
+                                <option value="">Choose</option>
+                                {clubs?.map((club: any) => <option key={club.id} value={club.id}>{club.name}</option>)}
                             </select>
                         </div>
                         <div>

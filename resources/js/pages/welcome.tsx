@@ -1,118 +1,44 @@
 import { Head, Link, usePage } from '@inertiajs/react';
+import { ArrowUpRight, BarChart3, CalendarDays, CheckCircle2, ChevronRight, ClipboardCheck, QrCode, ShieldCheck, Sparkles, Users } from 'lucide-react';
+
+const heroImage = 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=1900&q=88';
+const featureImage = 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=1200&q=85';
 
 export default function Welcome() {
-    const { auth, events = [], stats = {}, categories = [], gallery = [] } = usePage().props as any;
+    const { auth, events = [], stats = {}, gallery = [] } = usePage().props as any;
+    const features = [
+        { icon: CalendarDays, title: 'Event operations', text: 'Create, approve and publish every campus moment from one calm workspace.' },
+        { icon: Users, title: 'Smart registration', text: 'Make participation effortless with live capacity and clean event details.' },
+        { icon: QrCode, title: 'QR attendance', text: 'A faster, more reliable check-in experience for event day.' },
+        { icon: ShieldCheck, title: 'Digital certificates', text: 'Recognise student achievement with verifiable certificates.' },
+        { icon: ClipboardCheck, title: 'Feedback loops', text: 'Turn student feedback into better programmes next semester.' },
+        { icon: BarChart3, title: 'Clear analytics', text: 'See participation, attendance and engagement at a glance.' },
+    ];
 
     return (
         <>
-            <Head title="CampusConnect — One platform for every university event" />
-
-            <div className="min-h-screen bg-slate-50 dark:bg-slate-900">
-                <header className="border-b bg-white dark:bg-slate-800">
-                    <div className="container mx-auto flex items-center justify-between px-6 py-4">
-                        <div className="text-xl font-bold text-blue-700">CampusConnect</div>
-                        <nav className="flex items-center gap-4 text-sm">
-                            <Link href={route('events.index')}>Events</Link>
-                            <Link href={route('gallery.index')}>Gallery</Link>
-                            <Link href={route('about')}>About</Link>
-                            <Link href={route('contact')}>Contact</Link>
-                            {auth?.user ? (
-                                <Link href={route('dashboard')} className="rounded bg-blue-600 px-3 py-1 text-white">Dashboard</Link>
-                            ) : (
-                                <>
-                                    <Link href={route('login')}>Log in</Link>
-                                    <Link href={route('register')} className="rounded border px-3 py-1">Register</Link>
-                                </>
-                            )}
-                        </nav>
+            <Head title="CampusConnect — Connect. Participate. Achieve." />
+            <div className="min-h-screen bg-[#f7f9fc] text-slate-900">
+                <header className="absolute inset-x-0 top-0 z-20 border-b border-white/15 bg-slate-950/20 text-white backdrop-blur-md">
+                    <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-5 lg:px-8">
+                        <Link href={route('home')} className="flex items-center gap-3 font-semibold tracking-tight"><span className="flex size-10 items-center justify-center rounded-xl bg-emerald-400 text-slate-950"><Sparkles className="size-5" /></span>CampusConnect</Link>
+                        <nav className="hidden items-center gap-8 text-sm text-slate-200 md:flex"><Link href={route('events.index')} className="transition hover:text-white">Events</Link><Link href={route('gallery.index')} className="transition hover:text-white">Gallery</Link><Link href={route('about')} className="transition hover:text-white">About</Link><Link href={route('contact')} className="transition hover:text-white">Contact</Link></nav>
+                        <div className="flex items-center gap-3 text-sm">{auth?.user ? <Link href={route('dashboard')} className="rounded-lg bg-white px-4 py-2 font-medium text-slate-900 transition hover:bg-emerald-100">Open portal</Link> : <><Link href={route('login')} className="hidden sm:inline">Sign in</Link><Link href={route('register')} className="rounded-lg bg-emerald-400 px-4 py-2 font-semibold text-slate-950 transition hover:bg-emerald-300">Get started</Link></>}</div>
                     </div>
                 </header>
 
-                <section className="bg-gradient-to-br from-blue-700 to-indigo-800 text-white">
-                    <div className="container mx-auto px-6 py-20">
-                        <h1 className="text-4xl font-bold md:text-5xl">One platform for every university event.</h1>
-                        <p className="mt-4 max-w-2xl text-lg text-blue-100">
-                            Discover workshops, seminars, hackathons, and cultural programs. Register, attend with QR codes, earn certificates, and share feedback.
-                        </p>
-                        <div className="mt-8 flex gap-3">
-                            <Link href={route('events.index')} className="rounded bg-white px-5 py-2 font-medium text-blue-700">Browse Events</Link>
-                            <Link href={route('register')} className="rounded border border-white px-5 py-2">Get Started</Link>
-                        </div>
-                    </div>
-                </section>
+                <section className="relative isolate min-h-[680px] overflow-hidden bg-slate-950 text-white"><img src={heroImage} alt="Students collaborating at a university event" className="absolute inset-0 z-0 h-full w-full object-cover opacity-50" /><div className="absolute inset-0 z-0 bg-[linear-gradient(100deg,rgba(2,15,35,.96)_10%,rgba(2,15,35,.68)_48%,rgba(2,15,35,.22)_100%)]" /><div className="relative z-10 mx-auto flex min-h-[680px] max-w-7xl items-end px-5 pb-20 pt-36 lg:px-8 lg:pb-28"><div className="max-w-3xl"><div className="mb-6 inline-flex items-center gap-2 rounded-full border border-emerald-300/30 bg-emerald-300/10 px-3 py-1.5 text-xs font-medium text-emerald-200"><span className="size-1.5 rounded-full bg-emerald-300" />Campus life, made more connected</div><h1 className="max-w-2xl text-5xl font-semibold leading-[1.02] tracking-tight sm:text-6xl lg:text-7xl">Discover. Participate. Achieve.</h1><p className="mt-6 max-w-xl text-lg leading-8 text-slate-200">One trusted platform for workshops, competitions, seminars and the moments that make university unforgettable.</p><div className="mt-9 flex flex-wrap gap-3"><Link href={route('events.index')} className="inline-flex items-center gap-2 rounded-xl bg-emerald-400 px-5 py-3 font-semibold text-slate-950 transition hover:-translate-y-0.5 hover:bg-emerald-300">Explore events <ArrowUpRight className="size-4" /></Link><Link href={route('register')} className="rounded-xl border border-white/30 px-5 py-3 font-medium text-white transition hover:bg-white/10">Join your campus</Link></div><div className="mt-12 flex items-center gap-8 text-sm text-slate-300"><span><strong className="block text-2xl text-white">{stats.students ?? 0}</strong>student community</span><span><strong className="block text-2xl text-white">{stats.events ?? 0}</strong>live events</span><span><strong className="block text-2xl text-white">{stats.departments ?? 0}</strong>departments</span></div></div></div></section>
 
-                <main className="container mx-auto px-6 py-12 space-y-16">
-                    <section>
-                        <h2 className="mb-6 text-2xl font-semibold">University at a glance</h2>
-                        <div className="grid gap-4 md:grid-cols-4">
-                            <div className="rounded-xl border bg-white p-6 dark:bg-slate-800"><div className="text-sm text-gray-500">Published Events</div><div className="text-3xl font-bold">{stats.events ?? 0}</div></div>
-                            <div className="rounded-xl border bg-white p-6 dark:bg-slate-800"><div className="text-sm text-gray-500">Categories</div><div className="text-3xl font-bold">{stats.categories ?? 0}</div></div>
-                            <div className="rounded-xl border bg-white p-6 dark:bg-slate-800"><div className="text-sm text-gray-500">Departments</div><div className="text-3xl font-bold">{stats.departments ?? 0}</div></div>
-                            <div className="rounded-xl border bg-white p-6 dark:bg-slate-800"><div className="text-sm text-gray-500">Students</div><div className="text-3xl font-bold">{stats.students ?? 0}</div></div>
-                        </div>
-                    </section>
+                <main>
+                    <section className="mx-auto max-w-7xl px-5 py-20 lg:px-8 lg:py-28"><div className="flex flex-col justify-between gap-5 md:flex-row md:items-end"><div><p className="text-sm font-semibold uppercase tracking-[.18em] text-emerald-700">The campus pulse</p><h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">What’s happening on campus?</h2></div><Link href={route('events.index')} className="inline-flex items-center gap-1 text-sm font-semibold text-blue-800">View all events <ChevronRight className="size-4" /></Link></div><div className="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">{events.slice(0, 6).map((event: any, index: number) => <Link key={event.id} href={route('events.show', event.slug)} className="group overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl"><div className="relative h-52 overflow-hidden"><img src={event.banner ? `/storage/${event.banner}` : [heroImage, featureImage, 'https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=1200&q=85'][index % 3]} alt="" className="h-full w-full object-cover transition duration-500 group-hover:scale-105" /><span className="absolute left-4 top-4 rounded-full bg-white/90 px-3 py-1 text-xs font-semibold text-blue-900">{event.category?.name ?? 'Campus event'}</span></div><div className="p-5"><h3 className="text-lg font-semibold group-hover:text-blue-800">{event.title}</h3><p className="mt-2 line-clamp-2 text-sm leading-6 text-slate-500">{event.short_description}</p><div className="mt-5 flex items-center justify-between border-t border-slate-100 pt-4 text-xs text-slate-500"><span>{event.start_at ? new Date(event.start_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) : 'Date TBA'}</span><span className="inline-flex items-center gap-1 font-semibold text-blue-800">View event <ArrowUpRight className="size-3.5" /></span></div></div></Link>)}</div></section>
 
-                    <section className="grid gap-8 lg:grid-cols-2">
-                        <div>
-                            <h2 className="mb-4 text-2xl font-semibold">Upcoming Events</h2>
-                            {events.length ? (
-                                <ul className="space-y-3">
-                                    {events.map((e: any) => (
-                                        <li key={e.id} className="rounded-lg border bg-white p-4 dark:bg-slate-800">
-                                            <div className="font-medium">{e.title}</div>
-                                            <div className="text-sm text-gray-500">{e.short_description}</div>
-                                            <div className="mt-2 flex justify-between text-sm">
-                                                <span>{e.start_at ? new Date(e.start_at).toLocaleDateString() : 'Date TBA'}</span>
-                                                <Link href={route('events.show', e.slug)} className="text-blue-600">View</Link>
-                                            </div>
-                                        </li>
-                                    ))}
-                                </ul>
-                            ) : (
-                                <div className="rounded border border-dashed p-8 text-center text-gray-500">No upcoming events.</div>
-                            )}
-                        </div>
+                    <section className="border-y border-slate-200 bg-white"><div className="mx-auto grid max-w-7xl gap-12 px-5 py-20 lg:grid-cols-[.8fr_1.2fr] lg:items-center lg:px-8 lg:py-24"><div><p className="text-sm font-semibold uppercase tracking-[.18em] text-emerald-700">Built for momentum</p><h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">Everything your campus needs to move forward.</h2><p className="mt-5 max-w-md leading-7 text-slate-500">From the first event idea to the final certificate, CampusConnect keeps every handoff visible and every student experience human.</p></div><div className="grid gap-x-8 gap-y-10 sm:grid-cols-2">{features.map(({ icon: Icon, title, text }) => <div key={title} className="group"><Icon className="size-6 text-blue-800 transition group-hover:text-emerald-600" /><h3 className="mt-4 font-semibold">{title}</h3><p className="mt-2 text-sm leading-6 text-slate-500">{text}</p></div>)}</div></div></section>
 
-                        <div>
-                            <h2 className="mb-4 text-2xl font-semibold">Event Categories</h2>
-                            <div className="flex flex-wrap gap-2">
-                                {categories.map((c: any) => (
-                                    <Link key={c.id} href={route('events.index', { category_id: c.id })} className="rounded-full border bg-white px-4 py-2 text-sm dark:bg-slate-800">
-                                        {c.name}
-                                    </Link>
-                                ))}
-                            </div>
+                    <section className="mx-auto grid max-w-7xl gap-10 px-5 py-20 lg:grid-cols-2 lg:items-center lg:px-8 lg:py-28"><div className="relative overflow-hidden rounded-3xl"><img src={featureImage} alt="University students working together" className="h-[430px] w-full object-cover" /><div className="absolute bottom-5 left-5 rounded-2xl bg-slate-950/85 p-5 text-white backdrop-blur"><p className="text-xs font-semibold uppercase tracking-[.16em] text-emerald-300">For every learner</p><p className="mt-2 text-lg font-medium">Find your people. Find your next challenge.</p></div></div><div><p className="text-sm font-semibold uppercase tracking-[.18em] text-emerald-700">Connect. Participate. Achieve.</p><h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">Participation should feel like belonging.</h2><p className="mt-5 leading-7 text-slate-500">Whether it’s a coding contest in the lab, a seminar in the auditorium or a cultural evening under campus lights, your next meaningful moment starts here.</p><div className="mt-8 space-y-4">{['One place to discover what matters to you', 'A clear digital pass for every registration', 'Recognition that stays with your journey'].map((item) => <div key={item} className="flex items-center gap-3 text-sm font-medium"><CheckCircle2 className="size-5 text-emerald-600" />{item}</div>)}</div></div></section>
 
-                            <h2 className="mb-4 mt-8 text-2xl font-semibold">How It Works</h2>
-                            <ol className="space-y-2 text-sm text-gray-600">
-                                <li>1. Browse and register for published events</li>
-                                <li>2. Show your QR code at check-in</li>
-                                <li>3. Download your certificate after attendance</li>
-                                <li>4. Submit feedback to improve future events</li>
-                            </ol>
-                        </div>
-                    </section>
-
-                    {gallery.length > 0 && (
-                        <section>
-                            <div className="mb-4 flex items-center justify-between">
-                                <h2 className="text-2xl font-semibold">Event Gallery</h2>
-                                <Link href={route('gallery.index')} className="text-blue-600">View all</Link>
-                            </div>
-                            <div className="grid gap-4 sm:grid-cols-3 md:grid-cols-6">
-                                {gallery.map((item: any) => (
-                                    <img key={item.id} src={item.url} alt="" className="h-24 w-full rounded-lg object-cover" />
-                                ))}
-                            </div>
-                        </section>
-                    )}
+                    {gallery.length > 0 && <section className="bg-slate-950 px-5 py-20 text-white lg:px-8"><div className="mx-auto max-w-7xl"><div className="flex items-end justify-between"><div><p className="text-sm font-semibold uppercase tracking-[.18em] text-emerald-300">Campus in motion</p><h2 className="mt-3 text-3xl font-semibold">A living gallery of participation.</h2></div><Link href={route('gallery.index')} className="hidden items-center gap-1 text-sm text-slate-300 sm:flex">Open gallery <ArrowUpRight className="size-4" /></Link></div><div className="mt-10 grid grid-cols-2 gap-3 md:grid-cols-4">{gallery.slice(0, 6).map((item: any) => <img key={item.id} src={item.url} alt={item.caption || 'Campus event'} className="h-40 w-full rounded-xl object-cover transition hover:scale-[1.02] md:h-52" />)}</div></div></section>}
                 </main>
-
-                <footer className="border-t bg-white py-8 dark:bg-slate-800">
-                    <div className="container mx-auto px-6 text-center text-sm text-gray-500">
-                        CampusConnect — Smart University Event Management Platform
-                    </div>
-                </footer>
+                <footer className="border-t border-slate-200 bg-white"><div className="mx-auto flex max-w-7xl flex-col gap-3 px-5 py-8 text-sm text-slate-500 sm:flex-row sm:items-center sm:justify-between lg:px-8"><span className="font-semibold text-slate-900">CampusConnect</span><span>Connect. Participate. Achieve.</span><span>CampusConnect University Portal</span></div></footer>
             </div>
         </>
     );

@@ -26,6 +26,12 @@ export default function Show({ event, registration }: any) {
             <div className="mx-auto max-w-3xl p-4">
                 <Link href={route('events.index')} className="text-sm text-blue-600">Back to events</Link>
 
+                <img
+                    src={event.banner ? `/storage/${event.banner}` : 'https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=1400&q=85'}
+                    alt=""
+                    className="mt-4 h-64 w-full rounded-xl object-cover"
+                />
+
                 <h1 className="mt-4 text-3xl font-bold">{event.title}</h1>
                 <p className="mt-2 text-gray-600">{event.short_description}</p>
 
@@ -69,9 +75,9 @@ export default function Show({ event, registration }: any) {
                         <>
                             <span className="rounded bg-green-100 px-3 py-2 text-sm text-green-800">You attended this event</span>
                             {registration?.id && (
-                                <Link href={route('certificates.generate', registration.id)} className="rounded bg-blue-600 px-4 py-2 text-white">
+                                <a href={route('certificates.generate', registration.id)} className="rounded bg-blue-600 px-4 py-2 text-white">
                                     Download Certificate
-                                </Link>
+                                </a>
                             )}
                         </>
                     ) : isStudent ? (

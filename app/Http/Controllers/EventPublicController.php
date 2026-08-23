@@ -14,6 +14,7 @@ class EventPublicController extends Controller
         $event = Event::query()
             ->with(['category', 'venue', 'organizer', 'department'])
             ->where('slug', $slug)
+            ->where('status', 'published')
             ->firstOrFail();
 
         $registration = null;

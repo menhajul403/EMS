@@ -1,7 +1,7 @@
 import AppLayout from '@/layouts/app-layout';
-import { Head, Link, router } from '@inertiajs/react';
+import { Head, Link } from '@inertiajs/react';
 
-export default function Index({ summary, categories, filters }: any) {
+export default function Index({ summary }: any) {
     return (
         <AppLayout>
             <Head title="Reports" />

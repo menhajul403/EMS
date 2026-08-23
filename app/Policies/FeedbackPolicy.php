@@ -18,7 +18,7 @@ class FeedbackPolicy
 
     public function viewAny(User $user): bool
     {
-        return $user->can('feedback.view');
+        return $user->can('feedback.view') || $user->can('feedback.create');
     }
 
     public function view(User $user, Feedback $feedback): bool

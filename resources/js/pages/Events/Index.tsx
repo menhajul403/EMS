@@ -51,6 +51,11 @@ export default function Index({ events, categories, departments, filters }: any)
                     <div className="grid gap-4 md:grid-cols-2">
                         {events.data.map((event: any) => (
                             <article key={event.id} className="rounded border p-4">
+                                <img
+                                    src={event.banner ? `/storage/${event.banner}` : 'https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=900&q=80'}
+                                    alt=""
+                                    className="mb-4 h-40 w-full rounded object-cover"
+                                />
                                 <h2 className="text-lg font-semibold">{event.title}</h2>
                                 <p className="mt-1 text-sm text-gray-500">{event.short_description}</p>
                                 <div className="mt-3 text-sm text-gray-600">

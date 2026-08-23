@@ -9,7 +9,7 @@ export default function QRCode({ registration }: any) {
   useEffect(() => {
     if (registration?.qr_code) {
       QRCodeLib.toDataURL(registration.qr_code)
-        .then(url => setSrc(url))
+        .then((url: string) => setSrc(url))
         .catch(() => setSrc(''));
     }
   }, [registration]);

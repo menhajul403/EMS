@@ -12,6 +12,7 @@ class PublicGalleryController extends Controller
     {
         $galleries = Gallery::query()
             ->with(['event:id,title,slug', 'uploadedBy:id,name'])
+            ->whereHas('event', fn ($query) => $query->where('status', 'published'))
             ->latest()
             ->paginate(24)
             ->through(fn (Gallery $gallery) => [
