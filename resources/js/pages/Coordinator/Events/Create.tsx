@@ -16,11 +16,12 @@ export default function Create({ categories, venues, departments, facultyAdvisor
         end_at: '',
         registration_deadline: '',
         capacity: '',
+        banner: null as File | null,
     });
 
     function submit(e: React.FormEvent) {
         e.preventDefault();
-        post(route('coordinator.events.store'));
+        post(route('coordinator.events.store'), { forceFormData: true });
     }
 
     const fieldClass = 'mt-1 w-full rounded border px-3 py-2';
@@ -110,6 +111,17 @@ export default function Create({ categories, venues, departments, facultyAdvisor
                             <label className="block text-sm font-medium">Capacity</label>
                             <input type="number" value={data.capacity} onChange={(e) => setData('capacity', e.target.value)} className={fieldClass} />
                         </div>
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium">Event Banner</label>
+                        <input
+                            type="file"
+                            accept="image/jpeg,image/png,image/webp"
+                            onChange={(e) => setData('banner', e.target.files?.[0] ?? null)}
+                            className="mt-1 w-full rounded border px-3 py-2"
+                        />
+                        <p className="mt-1 text-xs text-gray-500">JPG, PNG or WEBP, maximum 5 MB.</p>
+                        {errors.banner && <div className="text-sm text-red-600">{errors.banner}</div>}
                     </div>
                     <button type="submit" disabled={processing} className="rounded bg-blue-600 px-4 py-2 text-white">
                         Create Draft

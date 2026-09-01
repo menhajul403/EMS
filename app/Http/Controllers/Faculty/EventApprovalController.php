@@ -4,7 +4,10 @@ namespace App\Http\Controllers\Faculty;
 
 use App\Http\Controllers\Controller;
 use App\Models\Event;
+use App\Models\User;
 use App\Notifications\EventApprovedNotification;
+use App\Notifications\EventChangesRequestedNotification;
+use App\Notifications\EventPublishedNotification;
 use App\Notifications\EventRejectedNotification;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -44,11 +47,16 @@ class EventApprovalController extends Controller
         }
 
         $event->update([
-            'status' => 'approved',
+            'status' => 'published',
             'rejection_reason' => null,
         ]);
 
-        $event->organizer?->notify(new EventApprovedNotification($event));
+        $event->organizer?->notifyNow(new EventApprovedNotification($event));
+        User::query()
+            ->whereKeyNot(auth()->id())
+            ->whereKeyNot($event->organizer_id)
+            ->get()
+            ->each(fn (User $user) => $user->notifyNow(new EventPublishedNotification($event)));
 
         return back()->with('success', 'Event approved.');
     }
@@ -70,7 +78,7 @@ class EventApprovalController extends Controller
             'rejection_reason' => $validated['reason'],
         ]);
 
-        $event->organizer?->notify(new EventRejectedNotification($event, $validated['reason']));
+        $event->organizer?->notifyNow(new EventRejectedNotification($event, $validated['reason']));
 
         return back()->with('success', 'Event rejected.');
     }
@@ -91,6 +99,8 @@ class EventApprovalController extends Controller
             'status' => 'draft',
             'rejection_reason' => $validated['reason'],
         ]);
+
+        $event->organizer?->notifyNow(new EventChangesRequestedNotification($event, $validated['reason']));
 
         return back()->with('success', 'Changes requested. Event returned to coordinator.');
     }

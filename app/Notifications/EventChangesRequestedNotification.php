@@ -7,13 +7,15 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
 
-class EventRejectedNotification extends Notification implements ShouldQueue
+class EventChangesRequestedNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
     public function __construct(public Event $event, public string $reason) {}
 
     /**
+     * Get the notification's delivery channels.
+     *
      * @return array<int, string>
      */
     public function via(object $notifiable): array
@@ -22,17 +24,19 @@ class EventRejectedNotification extends Notification implements ShouldQueue
     }
 
     /**
+     * Get the array representation of the notification.
+     *
      * @return array<string, mixed>
      */
     public function toArray(object $notifiable): array
     {
         return [
-            'title' => 'Event Rejected',
-            'message' => "Your event \"{$this->event->title}\" was rejected: {$this->reason}",
+            'title' => 'Changes Requested',
+            'message' => "Changes were requested for your event \"{$this->event->title}\": {$this->reason}",
             'event_id' => $this->event->id,
             'event_slug' => $this->event->slug,
             'action_url' => route('coordinator.events.edit', $this->event->id),
-            'type' => 'event_rejected',
+            'type' => 'event_changes_requested',
         ];
     }
 }

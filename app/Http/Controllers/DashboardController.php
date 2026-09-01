@@ -32,6 +32,14 @@ class DashboardController extends Controller
         ];
 
         if ($roles->contains('Student')) {
+            $data['studentProfile'] = [
+                'name' => $user->name,
+                'email' => $user->email,
+                'student_id' => $user->student_id,
+                'phone' => $user->phone,
+                'department' => $user->department?->name,
+            ];
+
             $data['studentStats'] = [
                 'certificates' => Certificate::query()
                     ->whereHas('registration', fn ($q) => $q->where('user_id', $user->id))
@@ -73,19 +81,41 @@ class DashboardController extends Controller
         }
 
         if ($roles->intersect(['Super Admin', 'University Admin'])->isNotEmpty()) {
+            $isUniversityAdmin = $roles->contains('University Admin') && ! $roles->contains('Super Admin');
+            $universityId = $isUniversityAdmin ? $user->university_id : null;
+            $userQuery = User::query();
+            $eventQuery = Event::query();
+            $registrationQuery = Registration::query();
+            $attendanceQuery = Attendance::query();
+            $certificateQuery = Certificate::query();
+            $feedbackQuery = Feedback::query();
+            $departmentQuery = Department::query();
+            $categoryQuery = EventCategory::query();
+
+            if ($universityId !== null) {
+                $userQuery->where('university_id', $universityId);
+                $eventQuery->whereHas('organizer', fn ($query) => $query->where('university_id', $universityId));
+                $registrationQuery->whereHas('event.organizer', fn ($query) => $query->where('university_id', $universityId));
+                $attendanceQuery->whereHas('event.organizer', fn ($query) => $query->where('university_id', $universityId));
+                $certificateQuery->whereHas('registration.event.organizer', fn ($query) => $query->where('university_id', $universityId));
+                $feedbackQuery->whereHas('event.organizer', fn ($query) => $query->where('university_id', $universityId));
+                $departmentQuery->where('university_id', $universityId);
+                $categoryQuery->whereHas('events.organizer', fn ($query) => $query->where('university_id', $universityId));
+            }
+
             $data['adminStats'] = [
-                'users' => User::count(),
-                'students' => User::role('Student')->count(),
-                'coordinators' => User::role('Coordinator')->count(),
-                'faculty' => User::role('Faculty')->count(),
-                'events' => Event::count(),
-                'published_events' => Event::where('status', 'published')->count(),
-                'registrations' => Registration::where('status', 'registered')->count(),
-                'attendance' => Attendance::count(),
-                'certificates' => Certificate::count(),
-                'feedback' => Feedback::count(),
-                'departments' => Department::count(),
-                'categories' => EventCategory::count(),
+                'users' => $userQuery->count(),
+                'students' => (clone $userQuery)->role('Student')->count(),
+                'coordinators' => (clone $userQuery)->role('Coordinator')->count(),
+                'faculty' => (clone $userQuery)->role('Faculty')->count(),
+                'events' => $eventQuery->count(),
+                'published_events' => (clone $eventQuery)->where('status', 'published')->count(),
+                'registrations' => $registrationQuery->where('status', 'registered')->count(),
+                'attendance' => $attendanceQuery->count(),
+                'certificates' => $certificateQuery->count(),
+                'feedback' => $feedbackQuery->count(),
+                'departments' => $departmentQuery->count(),
+                'categories' => $categoryQuery->count(),
             ];
         }
 

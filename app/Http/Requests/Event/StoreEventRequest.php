@@ -27,6 +27,7 @@ class StoreEventRequest extends FormRequest
             'end_at' => 'nullable|date|after_or_equal:start_at',
             'registration_deadline' => 'nullable|date',
             'capacity' => 'nullable|integer|min:0',
+            'banner' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
         ];
     }
 }

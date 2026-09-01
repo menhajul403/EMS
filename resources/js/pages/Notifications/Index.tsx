@@ -1,5 +1,5 @@
 import AppLayout from '@/layouts/app-layout';
-import { Head, router } from '@inertiajs/react';
+import { Head, Link, router } from '@inertiajs/react';
 
 export default function Index({ notifications, unreadCount }: any) {
     return (
@@ -24,15 +24,30 @@ export default function Index({ notifications, unreadCount }: any) {
                         {notifications.data.map((notification: any) => (
                             <li
                                 key={notification.id}
-                                className={`rounded border p-4 ${notification.read_at ? 'bg-white' : 'bg-blue-50'}`}
+                                className={`rounded border border-border p-4 ${notification.read_at ? 'bg-card' : 'bg-secondary/30'}`}
                             >
                                 <div className="font-medium">{notification.data.title}</div>
-                                <div className="mt-1 text-sm text-gray-600">{notification.data.message}</div>
+                                <div className="mt-1 text-sm text-muted-foreground">{notification.data.message}</div>
+                                {(notification.data.action_url || notification.data.event_slug) && (
+                                    <Link
+                                        href={
+                                            notification.data.action_url ||
+                                            (notification.data.type === 'event_submitted'
+                                                ? route('faculty.events.index')
+                                                : ['event_changes_requested', 'event_rejected'].includes(notification.data.type)
+                                                  ? route('coordinator.events.edit', notification.data.event_id)
+                                                  : route('events.show', notification.data.event_slug))
+                                        }
+                                        className="mt-2 inline-block text-sm font-medium text-primary hover:underline"
+                                    >
+                                        View event
+                                    </Link>
+                                )}
                                 {!notification.read_at && (
                                     <button
                                         type="button"
                                         onClick={() => router.patch(route('notifications.read', notification.id))}
-                                        className="mt-2 text-sm text-blue-600"
+                                        className="mt-2 ml-3 text-sm text-blue-600"
                                     >
                                         Mark as read
                                     </button>

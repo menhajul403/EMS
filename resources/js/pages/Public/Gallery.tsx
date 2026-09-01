@@ -1,4 +1,4 @@
-import BrandLogo from '@/components/brand-logo';
+import PublicHeader from '@/components/public-header';
 import PublicFooter from '@/components/public-footer';
 import { Head, Link } from '@inertiajs/react';
 import { ArrowUpRight, Camera, Image as ImageIcon } from 'lucide-react';
@@ -9,24 +9,8 @@ export default function Gallery({ galleries }: any) {
     return (
         <>
             <Head title="Event Gallery" />
-            <div className="min-h-screen bg-[#f7f9fc] text-slate-900">
-                <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/95 backdrop-blur-md">
-                    <div className="mx-auto flex h-[76px] max-w-7xl items-center justify-between px-5 lg:px-8">
-                        <BrandLogo href={route('home')} />
-                        <nav className="hidden items-center gap-8 text-sm text-slate-500 md:flex">
-                            <Link href={route('home')}>Home</Link>
-                            <Link href={route('events.index')}>Events</Link>
-                            <Link href={route('gallery.index')} className="font-semibold text-blue-900">
-                                Gallery
-                            </Link>
-                            <Link href={route('about')}>About</Link>
-                            <Link href={route('contact')}>Contact</Link>
-                        </nav>
-                        <Link href={route('login')} className="text-sm font-medium text-slate-600">
-                            Log in
-                        </Link>
-                    </div>
-                </header>
+            <div className="public-page min-h-screen bg-background text-foreground">
+                <PublicHeader active="gallery" />
 
                 <main className="mx-auto max-w-7xl px-5 py-14 lg:px-8 lg:py-20">
                     <div className="flex flex-col justify-between gap-6 md:flex-row md:items-end">

@@ -8,6 +8,7 @@ use App\Models\Event;
 use App\Models\EventCategory;
 use App\Models\Feedback;
 use App\Models\Registration;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -65,7 +66,7 @@ class ReportController extends Controller
     {
         $this->authorize('report.view');
 
-        $query = Registration::query()->with(['user', 'event'])->latest();
+        $query = Registration::query()->with(['user.department', 'event'])->latest();
 
         if ($status = $request->string('status')->trim()->toString()) {
             $query->where('status', $status);
@@ -80,6 +81,34 @@ class ReportController extends Controller
             'filters' => $request->only(['status', 'event_id']),
             'events' => Event::orderBy('title')->get(['id', 'title']),
         ]);
+    }
+
+    public function exportRegistrations(Request $request)
+    {
+        $this->authorize('report.view');
+
+        $query = Registration::query()->with(['user.department', 'event'])->latest();
+
+        if ($status = $request->string('status')->trim()->toString()) {
+            $query->where('status', $status);
+        }
+
+        if ($eventId = $request->integer('event_id')) {
+            $query->where('event_id', $eventId);
+        }
+
+        $registrations = $query->get();
+        $eventName = $request->integer('event_id')
+            ? Event::find($request->integer('event_id'))?->title ?? 'Event'
+            : 'All events';
+
+        $pdf = Pdf::loadView('reports.registrations-pdf', [
+            'registrations' => $registrations,
+            'eventName' => $eventName,
+            'generatedAt' => now()->format('Y-m-d H:i:s'),
+        ]);
+
+        return $pdf->download('event-registrations-report.pdf');
     }
 
     public function exportEvents(Request $request): StreamedResponse

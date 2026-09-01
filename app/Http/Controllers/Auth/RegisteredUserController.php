@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Department;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
@@ -22,7 +23,9 @@ class RegisteredUserController extends Controller
      */
     public function create(): Response
     {
-        return Inertia::render('auth/register');
+        return Inertia::render('auth/register', [
+            'departments' => Department::orderBy('name')->get(['id', 'name']),
+        ]);
     }
 
     /**
@@ -34,13 +37,19 @@ class RegisteredUserController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
+            'student_id' => ['nullable', 'string', 'max:50'],
             'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
+            'phone' => ['nullable', 'string', 'max:30'],
+            'department_id' => ['nullable', 'exists:departments,id'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
         $user = User::create([
             'name' => $request->name,
+            'student_id' => $request->student_id,
             'email' => $request->email,
+            'phone' => $request->phone,
+            'department_id' => $request->department_id,
             'password' => Hash::make($request->password),
         ]);
 

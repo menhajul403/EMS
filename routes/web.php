@@ -11,13 +11,16 @@ use App\Http\Controllers\ReportController;
 use App\Models\Department;
 use App\Models\Event;
 use App\Models\EventCategory;
+use App\Models\Feedback;
 use App\Models\Gallery;
+use App\Models\Registration;
+use App\Models\Club;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     $events = Event::query()
-        ->with(['category', 'venue'])
+        ->with(['category', 'venue', 'department'])
         ->where('status', 'published')
         ->orderBy('start_at')
         ->take(6)
@@ -25,20 +28,27 @@ Route::get('/', function () {
 
     $stats = [
         'events' => Event::where('status', 'published')->count(),
-        'categories' => EventCategory::count(),
-        'departments' => Department::count(),
+        'clubs' => Club::count(),
         'students' => User::whereHas('roles', fn ($q) => $q->where('name', 'Student'))->count(),
+        'registrations' => Registration::where('status', '!=', 'cancelled')->count(),
+        'attendance' => Registration::where('status', '!=', 'cancelled')->count()
+            ? round((Registration::where('status', 'attended')->count() / Registration::where('status', '!=', 'cancelled')->count()) * 100)
+            : 0,
+        'satisfaction' => round(Feedback::avg('rating_overall') * 20),
+        'feedback' => Feedback::count(),
     ];
 
     $categories = EventCategory::orderBy('name')->get(['id', 'name', 'slug']);
     $gallery = Gallery::query()->latest()->take(6)->get()
         ->map(fn (Gallery $g) => [...$g->toArray(), 'url' => asset('storage/'.$g->file_path)]);
+    $feedback = Feedback::query()->with('student')->latest()->take(3)->get();
 
     return inertia('welcome', [
         'events' => $events,
         'stats' => $stats,
         'categories' => $categories,
         'gallery' => $gallery,
+        'feedback' => $feedback,
     ]);
 })->name('home');
 
@@ -61,6 +71,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
         Route::get('/reports/events', [ReportController::class, 'events'])->name('reports.events');
         Route::get('/reports/registrations', [ReportController::class, 'registrations'])->name('reports.registrations');
+        Route::get('/reports/registrations/export', [ReportController::class, 'exportRegistrations'])->name('reports.registrations.export');
         Route::get('/reports/events/export', [ReportController::class, 'exportEvents'])->name('reports.events.export');
     });
 });

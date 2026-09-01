@@ -11,7 +11,9 @@ use App\Models\Event;
 use App\Models\EventCategory;
 use App\Models\User;
 use App\Models\Venue;
+use App\Notifications\EventSubmittedNotification;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -49,10 +51,18 @@ class EventController extends Controller
     {
         $this->authorize('create', Event::class);
 
-        Event::create($request->validated() + [
+        $validated = $request->validated();
+        $banner = $request->file('banner');
+        unset($validated['banner']);
+
+        $event = Event::create($validated + [
             'organizer_id' => $request->user()->id,
             'status' => 'draft',
         ]);
+
+        if ($banner) {
+            $event->update(['banner' => $banner->store('events/banners', 'public')]);
+        }
 
         return redirect()->route('coordinator.events.index')->with('success', 'Event created as draft.');
     }
@@ -75,7 +85,19 @@ class EventController extends Controller
     {
         $this->authorize('update', $event);
 
-        $event->update($request->validated());
+        $validated = $request->validated();
+        $banner = $request->file('banner');
+        unset($validated['banner']);
+
+        if ($banner) {
+            $oldBanner = $event->banner;
+            $validated['banner'] = $banner->store('events/banners', 'public');
+            if ($oldBanner) {
+                Storage::disk('public')->delete($oldBanner);
+            }
+        }
+
+        $event->update($validated);
 
         return redirect()->route('coordinator.events.index')->with('success', 'Event updated.');
     }
@@ -84,6 +106,9 @@ class EventController extends Controller
     {
         $this->authorize('delete', $event);
 
+        if ($event->banner) {
+            Storage::disk('public')->delete($event->banner);
+        }
         $event->delete();
 
         return back()->with('success', 'Event deleted.');
@@ -101,6 +126,12 @@ class EventController extends Controller
             'status' => 'pending',
             'rejection_reason' => null,
         ]);
+
+        $faculty = $event->faculty_advisor_id
+            ? User::role('Faculty')->whereKey($event->faculty_advisor_id)->get()
+            : User::role('Faculty')->where('department_id', $event->department_id)->get();
+
+        $faculty->each(fn (User $user) => $user->notifyNow(new EventSubmittedNotification($event)));
 
         return back()->with('success', 'Event submitted for faculty approval.');
     }

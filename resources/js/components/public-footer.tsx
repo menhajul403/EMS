@@ -3,7 +3,7 @@ import { Link } from '@inertiajs/react';
 
 export default function PublicFooter() {
     return (
-        <footer className="bg-[#071b35] text-slate-300">
+        <footer className="bg-primary text-primary-foreground">
             <div className="mx-auto grid max-w-7xl gap-10 px-5 py-14 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr] lg:px-8">
                 <div>
                     <BrandLogo href={route('home')} dark />

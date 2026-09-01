@@ -51,9 +51,14 @@ export default function Show({ event, registration }: any) {
 
                 <div className="mt-6 flex flex-wrap gap-3">
                     {!auth?.user ? (
-                        <Link href={route('login')} className="rounded bg-blue-600 px-4 py-2 text-white">
-                            Log in to register
-                        </Link>
+                        <div className="flex flex-wrap gap-3">
+                            <Link href={route('register')} className="rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700">
+                                Create account to register
+                            </Link>
+                            <Link href={route('login')} className="rounded border border-blue-600 px-4 py-2 text-blue-600 hover:bg-blue-50">
+                                Log in
+                            </Link>
+                        </div>
                     ) : canRegister ? (
                         <form onSubmit={register}>
                             <button type="submit" disabled={processing} className="rounded bg-blue-600 px-4 py-2 text-white">

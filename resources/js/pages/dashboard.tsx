@@ -2,7 +2,10 @@ import DashboardLayout from '@/layouts/dashboard-layout';
 import { Head, Link, usePage } from '@inertiajs/react';
 
 export default function Dashboard() {
-    const { auth, stats, recentEvents, roles, studentStats, coordinatorStats, facultyStats, adminStats } = usePage().props as any;
+    const { auth, stats, recentEvents, roles, studentProfile, studentStats, coordinatorStats, facultyStats, adminStats } = usePage().props as any;
+
+    const profileName = studentProfile?.name ?? auth?.user?.name ?? 'Student';
+    const profileEmail = studentProfile?.email ?? auth?.user?.email ?? '—';
 
     return (
         <DashboardLayout>
@@ -10,8 +13,15 @@ export default function Dashboard() {
 
             <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
                 <div className="rounded-xl bg-white p-4 shadow-sm dark:bg-slate-900">
-                    <h3 className="text-lg font-medium">Welcome{auth?.user ? `, ${auth.user.name}` : ''}</h3>
+                    <h3 className="text-lg font-medium">Welcome{profileName ? `, ${profileName}` : ''}</h3>
                     <p className="text-sm text-muted-foreground">One platform for every university event.</p>
+                    {studentProfile && (
+                        <div className="mt-3 grid gap-2 text-sm text-gray-600 md:grid-cols-3">
+                            <div><span className="font-medium text-gray-700">Email:</span> {profileEmail}</div>
+                            <div><span className="font-medium text-gray-700">Student ID:</span> {studentProfile.student_id || '—'}</div>
+                            <div><span className="font-medium text-gray-700">Department:</span> {studentProfile.department || '—'}</div>
+                        </div>
+                    )}
                     {roles?.length > 0 && <p className="mt-1 text-xs text-gray-500">Roles: {roles.join(', ')}</p>}
                 </div>
 

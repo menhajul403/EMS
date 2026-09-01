@@ -4,7 +4,8 @@ import { Head, useForm } from '@inertiajs/react';
 export default function Edit({ event, categories, venues, departments, facultyAdvisors, clubs }: any) {
     const formatDate = (d: string | null) => d ? new Date(d).toISOString().slice(0, 16) : '';
 
-    const { data, setData, put, processing, errors } = useForm({
+    const { data, setData, post, processing, errors } = useForm({
+        _method: 'put',
         title: event.title || '',
         slug: event.slug || '',
         short_description: event.short_description || '',
@@ -18,11 +19,12 @@ export default function Edit({ event, categories, venues, departments, facultyAd
         end_at: formatDate(event.end_at),
         registration_deadline: formatDate(event.registration_deadline),
         capacity: event.capacity || '',
+        banner: null as File | null,
     });
 
     function submit(e: React.FormEvent) {
         e.preventDefault();
-        put(route('coordinator.events.update', event.id));
+        post(route('coordinator.events.update', event.id), { forceFormData: true });
     }
 
     const fieldClass = 'mt-1 w-full rounded border px-3 py-2';
@@ -104,6 +106,20 @@ export default function Edit({ event, categories, venues, departments, facultyAd
                             <label className="block text-sm font-medium">Capacity</label>
                             <input type="number" value={data.capacity} onChange={(e) => setData('capacity', e.target.value)} className={fieldClass} />
                         </div>
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium">Event Banner</label>
+                        {event.banner && (
+                            <img src={`/storage/${event.banner}`} alt="Current event banner" className="mt-2 h-32 w-full rounded object-cover" />
+                        )}
+                        <input
+                            type="file"
+                            accept="image/jpeg,image/png,image/webp"
+                            onChange={(e) => setData('banner', e.target.files?.[0] ?? null)}
+                            className="mt-2 w-full rounded border px-3 py-2"
+                        />
+                        <p className="mt-1 text-xs text-gray-500">Upload a new image to replace the current banner. Maximum 5 MB.</p>
+                        {errors.banner && <div className="text-sm text-red-600">{errors.banner}</div>}
                     </div>
                     <button type="submit" disabled={processing} className="rounded bg-blue-600 px-4 py-2 text-white">Update Event</button>
                 </form>

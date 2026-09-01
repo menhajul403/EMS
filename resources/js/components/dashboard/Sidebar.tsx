@@ -1,6 +1,9 @@
 import BrandLogo from '@/components/brand-logo';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { UserInfo } from '@/components/user-info';
+import { UserMenuContent } from '@/components/user-menu-content';
 import { Link, usePage } from '@inertiajs/react';
-import { BarChart3, CalendarDays, ClipboardCheck, FolderKanban, LayoutGrid, MessageSquare, QrCode, Users } from 'lucide-react';
+import { BarChart3, Building2, CalendarDays, ChevronsUpDown, ClipboardCheck, FolderKanban, LayoutGrid, MessageSquare, QrCode, Settings, Users } from 'lucide-react';
 
 export default function Sidebar() {
     const { auth, url } = usePage().props as any;
@@ -26,9 +29,20 @@ export default function Sidebar() {
         ...(roles.includes('University Admin')
             ? [
                   { label: 'Users', href: route('university.users.index'), icon: Users },
+                                    { label: 'Departments', href: route('university.departments.index'), icon: Building2 },
+                                    { label: 'Clubs', href: route('university.clubs.index'), icon: Building2 },
+                                    { label: 'Categories', href: route('university.categories.index'), icon: FolderKanban },
+                                    { label: 'Venues', href: route('university.venues.index'), icon: Building2 },
                   { label: 'Reports', href: route('reports.index'), icon: BarChart3 },
               ]
             : []),
+                ...(roles.includes('Super Admin')
+                        ? [
+                                    { label: 'Universities', href: route('super-admin.universities.index'), icon: Building2 },
+                                    { label: 'Reports', href: route('reports.index'), icon: BarChart3 },
+                                      { label: 'Settings', href: route('profile.edit'), icon: Settings },
+                            ]
+                        : []),
     ];
 
     return (
@@ -51,10 +65,19 @@ export default function Sidebar() {
                         </Link>
                     ))}
                 </nav>
-                <div className="rounded-2xl border border-slate-800 bg-slate-900 p-4 text-xs text-slate-400">
-                    <p className="font-medium text-slate-200">Connect. Participate. Achieve.</p>
-                    <p className="mt-1">Your campus, moving together.</p>
-                </div>
+                {auth?.user && (
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <button className="flex w-full items-center gap-3 rounded-xl border border-slate-800 px-3 py-3 text-left transition hover:bg-slate-800 hover:text-white">
+                                <UserInfo user={auth.user} />
+                                <ChevronsUpDown className="ml-auto size-4 shrink-0 text-slate-500" />
+                            </button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent className="w-64 rounded-lg" align="end" side="top">
+                            <UserMenuContent user={auth.user} />
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                )}
             </div>
         </aside>
     );

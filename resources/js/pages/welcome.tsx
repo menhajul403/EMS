@@ -1,5 +1,6 @@
-import BrandLogo from '@/components/brand-logo';
+import PublicHeader from '@/components/public-header';
 import PublicFooter from '@/components/public-footer';
+import FlashMessages from '@/components/flash-messages';
 import { Head, Link, usePage } from '@inertiajs/react';
 import {
     ArrowRight,
@@ -22,7 +23,7 @@ const heroImage = 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?
 const featureImage = 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=1200&q=85';
 
 export default function Welcome() {
-    const { auth, events = [], stats = {}, gallery = [], categories = [] } = usePage().props as any;
+    const { auth, events = [], stats = {}, gallery = [], categories = [], feedback = [] } = usePage().props as any;
     const previewEvents = events.slice(0, 3);
     const categoryDescriptions: Record<string, string> = {
         Workshop: 'Hands-on skill building sessions',
@@ -35,36 +36,6 @@ export default function Welcome() {
         Training: 'Certified training programs',
         Competition: 'Project and innovation contests',
     };
-    const galleryFallback = [
-        heroImage,
-        featureImage,
-        'https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=1200&q=85',
-        'https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=1200&q=85',
-        'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=1200&q=85',
-        heroImage,
-        featureImage,
-        'https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=1200&q=85',
-    ];
-    const testimonials = [
-        {
-            quote: 'I used to hear about workshops after they happened. Now everything is in one feed and my certificates are all in one place.',
-            name: 'Nusrat Jahan',
-            role: 'CSE, 4th year',
-            initials: 'NJ',
-        },
-        {
-            quote: 'Approving events takes minutes instead of days, and I can see departmental participation without asking for a report.',
-            name: 'Dr. Tanvir Ahmed',
-            role: 'Faculty Advisor, CSE',
-            initials: 'TA',
-        },
-        {
-            quote: 'QR attendance removed the paper registers entirely. Certificate generation for participants took one click.',
-            name: 'Rakibul Hasan',
-            role: 'President, Computer Club',
-            initials: 'RH',
-        },
-    ];
     const features = [
         { icon: CalendarDays, title: 'Event operations', text: 'Create, approve and publish every campus moment from one calm workspace.' },
         { icon: Users, title: 'Smart registration', text: 'Make participation effortless with live capacity and clean event details.' },
@@ -77,51 +48,9 @@ export default function Welcome() {
     return (
         <>
             <Head title="EDU EVENTS - Academic Event Management System" />
-            <div className="min-h-screen bg-[#f7f9fc] text-slate-900">
-                <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/95 text-slate-900 shadow-sm backdrop-blur-md">
-                    <div className="mx-auto flex h-[76px] max-w-7xl items-center justify-between px-5 lg:px-8">
-                        <BrandLogo href={route('home')} dark />
-                        <nav className="hidden items-center gap-8 text-sm text-slate-200 md:flex">
-                            <Link href={route('home')} className="font-semibold text-[#0b477a]">
-                                Home
-                            </Link>
-                            <Link href={route('events.index')} className="text-slate-600 transition hover:text-[#0b477a]">
-                                Events
-                            </Link>
-                            <Link href={route('gallery.index')} className="text-slate-600 transition hover:text-[#0b477a]">
-                                Gallery
-                            </Link>
-                            <Link href={route('about')} className="text-slate-600 transition hover:text-[#0b477a]">
-                                About
-                            </Link>
-                            <Link href={route('contact')} className="text-slate-600 transition hover:text-[#0b477a]">
-                                Contact
-                            </Link>
-                        </nav>
-                        <div className="flex items-center gap-3 text-sm">
-                            {auth?.user ? (
-                                <Link
-                                    href={route('dashboard')}
-                                    className="rounded-lg bg-[#0b477a] px-4 py-2 font-medium text-white transition hover:bg-[#08385f]"
-                                >
-                                    Open portal
-                                </Link>
-                            ) : (
-                                <>
-                                    <Link href={route('login')} className="hidden text-slate-700 transition hover:text-[#0b477a] sm:inline">
-                                        Log in
-                                    </Link>
-                                    <Link
-                                        href={route('register')}
-                                        className="rounded-lg bg-[#d4a72c] px-4 py-2 font-semibold text-[#071b35] transition hover:bg-[#e0b83e]"
-                                    >
-                                        Get started
-                                    </Link>
-                                </>
-                            )}
-                        </div>
-                    </div>
-                </header>
+            <div className="public-page min-h-screen bg-background text-foreground">
+                <PublicHeader active="home" />
+                <FlashMessages />
 
                 <section className="relative isolate overflow-hidden bg-[#071b35] text-white">
                     <img
@@ -163,19 +92,19 @@ export default function Welcome() {
                             </div>
                             <dl className="mt-12 grid max-w-xl grid-cols-2 gap-x-8 gap-y-6 text-sm text-slate-300 sm:grid-cols-4">
                                 <div>
-                                    <dt className="text-2xl font-semibold text-white">{stats.students || '10K+'}</dt>
+                                    <dt className="text-2xl font-semibold text-white">{stats.students}</dt>
                                     <dd>Students</dd>
                                 </div>
                                 <div>
-                                    <dt className="text-2xl font-semibold text-white">{stats.events || '250+'}</dt>
+                                    <dt className="text-2xl font-semibold text-white">{stats.events}</dt>
                                     <dd>Events</dd>
                                 </div>
                                 <div>
-                                    <dt className="text-2xl font-semibold text-white">{stats.categories || '35+'}</dt>
+                                    <dt className="text-2xl font-semibold text-white">{stats.clubs}</dt>
                                     <dd>Clubs</dd>
                                 </div>
                                 <div>
-                                    <dt className="text-2xl font-semibold text-white">95%</dt>
+                                    <dt className="text-2xl font-semibold text-white">{stats.satisfaction}%</dt>
                                     <dd>Satisfaction</dd>
                                 </div>
                             </dl>
@@ -191,26 +120,19 @@ export default function Welcome() {
                             <div className="grid grid-cols-3 gap-3 py-5">
                                 <div className="rounded-xl bg-white/10 p-3">
                                     <p className="text-xs text-slate-400">Events</p>
-                                    <p className="mt-1 text-2xl font-semibold">{events.length || 5}</p>
+                                    <p className="mt-1 text-2xl font-semibold">{stats.events}</p>
                                 </div>
                                 <div className="rounded-xl bg-white/10 p-3">
                                     <p className="text-xs text-slate-400">Registrations</p>
-                                    <p className="mt-1 text-2xl font-semibold">1,284</p>
+                                    <p className="mt-1 text-2xl font-semibold">{stats.registrations}</p>
                                 </div>
                                 <div className="rounded-xl bg-white/10 p-3">
                                     <p className="text-xs text-slate-400">Attendance</p>
-                                    <p className="mt-1 text-2xl font-semibold">87%</p>
+                                    <p className="mt-1 text-2xl font-semibold">{stats.attendance}%</p>
                                 </div>
                             </div>
                             <div className="space-y-3">
-                                {(previewEvents.length
-                                    ? previewEvents
-                                    : [
-                                          { title: 'AI & Machine Learning Workshop', category: { name: 'Workshop' } },
-                                          { title: 'Inter University Programming Contest 2026', category: { name: 'Competition' } },
-                                          { title: 'Career Development Seminar', category: { name: 'Seminar' } },
-                                      ]
-                                ).map((event: any, index: number) => (
+                                {previewEvents.length ? previewEvents.map((event: any, index: number) => (
                                     <div key={event.id || index} className="flex items-center justify-between rounded-xl bg-white/[.07] p-3">
                                         <div className="min-w-0">
                                             <p className="truncate text-sm font-medium">{event.title}</p>
@@ -218,7 +140,7 @@ export default function Welcome() {
                                         </div>
                                         <CheckCircle2 className="ml-3 size-4 shrink-0 text-emerald-300" />
                                     </div>
-                                ))}
+                                )) : <p className="rounded-xl bg-white/[.07] p-3 text-sm text-slate-400">No published events yet.</p>}
                             </div>
                         </div>
                     </div>
@@ -491,13 +413,7 @@ export default function Welcome() {
                                 </Link>
                             </div>
                             <div className="mt-10 grid grid-cols-2 gap-3 md:grid-cols-4">
-                                {(gallery.length
-                                    ? gallery.slice(0, 8).map((item: any) => ({ url: item.url, caption: item.caption || 'Campus event' }))
-                                    : galleryFallback.map((url, index) => ({
-                                          url,
-                                          caption: ['Workshop session', 'Students collaborating', 'Campus programme', 'Event day'][index % 4],
-                                      }))
-                                ).map((item: any, index: number) => (
+                                {gallery.length ? gallery.slice(0, 8).map((item: any, index: number) => (
                                     <figure key={`${item.url}-${index}`} className="group overflow-hidden rounded-2xl">
                                         <img
                                             src={item.url}
@@ -505,7 +421,7 @@ export default function Welcome() {
                                             className="h-40 w-full object-cover transition duration-500 group-hover:scale-105 md:h-56"
                                         />
                                     </figure>
-                                ))}
+                                )) : <p className="col-span-full rounded-2xl border border-dashed border-slate-300 py-16 text-center text-sm text-slate-500">No gallery images yet.</p>}
                             </div>
                         </div>
                     </section>
@@ -515,30 +431,33 @@ export default function Welcome() {
                             <p className="text-sm font-semibold tracking-[.18em] text-blue-700 uppercase">Testimonials</p>
                             <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">Trusted across campus</h2>
                             <div className="mt-10 grid gap-5 lg:grid-cols-3">
-                                {testimonials.map((testimonial) => (
-                                    <article key={testimonial.name} className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+                                {feedback.length ? feedback.map((item: any) => {
+                                    const name = item.student?.name || 'Student';
+                                    return (
+                                    <article key={item.id} className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
                                         <Quote className="size-5 text-blue-600" />
-                                        <p className="mt-6 min-h-24 text-sm leading-6 text-slate-700">{testimonial.quote}</p>
+                                        <p className="mt-6 min-h-24 text-sm leading-6 text-slate-700">{item.comment || 'Feedback submitted by a participant.'}</p>
                                         <div className="mt-6 flex items-center gap-3 border-t border-slate-100 pt-4">
                                             <span className="flex size-9 items-center justify-center rounded-full bg-blue-50 text-xs font-semibold text-blue-700">
-                                                {testimonial.initials}
+                                                {name.split(' ').map((part: string) => part[0]).join('').slice(0, 2)}
                                             </span>
                                             <div>
-                                                <p className="text-sm font-semibold">{testimonial.name}</p>
-                                                <p className="text-xs text-slate-500">{testimonial.role}</p>
+                                                <p className="text-sm font-semibold">{name}</p>
+                                                <p className="text-xs text-slate-500">Event participant</p>
                                             </div>
                                         </div>
                                     </article>
-                                ))}
+                                    );
+                                }) : <p className="col-span-full rounded-2xl border border-dashed border-slate-300 py-12 text-center text-sm text-slate-500">No feedback submitted yet.</p>}
                             </div>
-                            <div className="mt-7 flex items-center gap-1 text-amber-500">
+                            {stats.feedback > 0 && <div className="mt-7 flex items-center gap-1 text-amber-500">
                                 <Star className="size-5 fill-current" />
                                 <Star className="size-5 fill-current" />
                                 <Star className="size-5 fill-current" />
                                 <Star className="size-5 fill-current" />
                                 <Star className="size-5 fill-current" />
-                                <span className="ml-2 text-sm text-slate-500">Average rating 4.7 / 5 from 1,243 feedback submissions this year</span>
-                            </div>
+                                <span className="ml-2 text-sm text-slate-500">Average rating {stats.satisfaction / 20} / 5 from {stats.feedback} feedback submissions</span>
+                            </div>}
                         </div>
                     </section>
 

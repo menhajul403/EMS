@@ -1,4 +1,4 @@
-import BrandLogo from '@/components/brand-logo';
+import PublicHeader from '@/components/public-header';
 import PublicFooter from '@/components/public-footer';
 import { Head, Link } from '@inertiajs/react';
 import { BarChart3, CalendarCheck2, CheckCircle2, ClipboardCheck, QrCode, ShieldCheck, Sparkles, Users } from 'lucide-react';
@@ -24,24 +24,8 @@ export default function About() {
     return (
         <>
             <Head title="About EDU EVENTS" />
-            <div className="min-h-screen bg-[#f7f9fc] text-slate-900">
-                <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/95 backdrop-blur-md">
-                    <div className="mx-auto flex h-[76px] max-w-7xl items-center justify-between px-5 lg:px-8">
-                        <BrandLogo href={route('home')} />
-                        <nav className="hidden items-center gap-8 text-sm text-slate-500 md:flex">
-                            <Link href={route('home')}>Home</Link>
-                            <Link href={route('events.index')}>Events</Link>
-                            <Link href={route('gallery.index')}>Gallery</Link>
-                            <Link href={route('about')} className="font-semibold text-blue-900">
-                                About
-                            </Link>
-                            <Link href={route('contact')}>Contact</Link>
-                        </nav>
-                        <Link href={route('login')} className="text-sm font-medium text-slate-600">
-                            Log in
-                        </Link>
-                    </div>
-                </header>
+            <div className="public-page min-h-screen bg-background text-foreground">
+                <PublicHeader active="about" />
                 <main>
                     <section className="relative overflow-hidden bg-[#071b35] text-white">
                         <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(52,211,153,.18),transparent_30%),linear-gradient(135deg,#071b35,#0c2b4c)]" />

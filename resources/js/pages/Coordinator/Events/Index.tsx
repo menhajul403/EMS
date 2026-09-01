@@ -10,6 +10,12 @@ export default function Index({ events }: any) {
         router.post(route('coordinator.events.publish', eventId));
     }
 
+    function remove(eventId: number) {
+        if (window.confirm('Delete this event? This action cannot be undone.')) {
+            router.delete(route('coordinator.events.destroy', eventId));
+        }
+    }
+
     return (
         <AppLayout>
             <Head title="My Events" />
@@ -49,6 +55,9 @@ export default function Index({ events }: any) {
                                         <Link href={route('coordinator.events.edit', event.id)} className="text-blue-600">
                                             Edit
                                         </Link>
+                                        <button type="button" onClick={() => remove(event.id)} className="text-left text-red-600">
+                                            Delete
+                                        </button>
                                         {['draft', 'rejected'].includes(event.status) && (
                                             <button type="button" onClick={() => submit(event.id)} className="text-left text-green-600">
                                                 Submit for Approval

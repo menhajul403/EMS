@@ -4,6 +4,10 @@ use App\Models\Event;
 use App\Models\Feedback;
 use App\Models\Registration;
 use App\Models\User;
+use App\Notifications\EventChangesRequestedNotification;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Notification;
 
 test('coordinator can submit event for approval', function () {
     seedRoles();
@@ -21,6 +25,28 @@ test('coordinator can submit event for approval', function () {
         ->assertRedirect();
 
     expect($event->fresh()->status)->toBe('pending');
+});
+
+test('coordinator can create an event with a banner', function () {
+    seedRoles();
+    Storage::fake('public');
+
+    $coordinator = User::factory()->create();
+    $coordinator->assignRole('Coordinator');
+
+    $this->actingAs($coordinator)
+        ->post(route('coordinator.events.store'), [
+            'title' => 'Banner Event',
+            'slug' => 'banner-event',
+            'banner' => UploadedFile::fake()->create('banner.jpg', 100, 'image/jpeg'),
+        ])
+        ->assertRedirect(route('coordinator.events.index'))
+        ->assertSessionHas('success');
+
+    $event = Event::where('slug', 'banner-event')->firstOrFail();
+
+    expect($event->banner)->not->toBeNull();
+    Storage::disk('public')->assertExists($event->banner);
 });
 
 test('faculty can approve pending events', function () {
@@ -41,7 +67,30 @@ test('faculty can approve pending events', function () {
         ->post(route('faculty.events.approve', $event))
         ->assertRedirect();
 
-    expect($event->fresh()->status)->toBe('approved');
+    expect($event->fresh()->status)->toBe('published');
+});
+
+test('faculty request changes notifies the coordinator', function () {
+    seedRoles();
+    Notification::fake();
+
+    $faculty = User::factory()->create();
+    $faculty->assignRole('Faculty');
+
+    $coordinator = User::factory()->create();
+    $coordinator->assignRole('Coordinator');
+
+    $event = Event::factory()->pending()->create([
+        'organizer_id' => $coordinator->id,
+        'faculty_advisor_id' => $faculty->id,
+    ]);
+
+    $this->actingAs($faculty)
+        ->post(route('faculty.events.request-changes', $event), ['reason' => 'Please add the learning outcomes.'])
+        ->assertRedirect();
+
+    expect($event->fresh()->status)->toBe('draft');
+    Notification::assertSentTo($coordinator, EventChangesRequestedNotification::class);
 });
 
 test('coordinator can publish approved events', function () {
